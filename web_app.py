@@ -1,11 +1,12 @@
 import streamlit as st
 import requests
 
+# Use your actual key here
 API_KEY = "YOUR_ALPHAVANTAGE_KEY_HERE"
 
 st.set_page_config(page_title="FX Sentinel", layout="wide")
 
-# CSS for Sentiment Colors and Professional Layout
+# CSS for Dark Mode and Sentiment Colors
 st.markdown("""
     <style>
     [data-testid="stAppViewContainer"] { background-color: #131722; }
@@ -16,17 +17,16 @@ st.markdown("""
         border: 1px solid #333;
         text-align: center;
         margin-bottom: 15px;
-        position: relative;
     }
-    /* Dynamic Color Strips */
-    .strip-green { border-top: 5px solid #00ff88; }
-    .strip-red { border-top: 5px solid #ff4444; }
+    /* Sentiment Border Colors */
+    .border-green { border-top: 5px solid #00ff88; }
+    .border-red { border-top: 5px solid #ff4444; }
     
-    h1 { color: white !important; margin: 5px 0; font-size: 42px !important; }
-    h3 { color: #888 !important; margin-bottom: 0px; letter-spacing: 2px; }
+    h1 { color: white !important; margin: 10px 0; font-size: 40px !important; }
+    h3 { color: #888 !important; margin-bottom: 0px; letter-spacing: 1px; }
     
-    .trend-up { color: #00ff88 !important; font-weight: bold; font-size: 14px; }
-    .trend-down { color: #ff4444 !important; font-weight: bold; font-size: 14px; }
+    .text-green { color: #00ff88 !important; font-weight: bold; }
+    .text-red { color: #ff4444 !important; font-weight: bold; }
     
     .stButton>button {
         width: 100%; border-radius: 10px; background-color: #2962ff;
@@ -37,6 +37,7 @@ st.markdown("""
 
 st.title("B MARKET SENTINEL V1.0")
 
+# Session State for Data persistence
 if 'usd_val' not in st.session_state:
     st.session_state.usd_val = 0
     st.session_state.usd_rate = 0
@@ -49,31 +50,31 @@ if st.button('SYNC GLOBAL DATA'):
         st.session_state.usd_val = int((rate/10)*100)
         st.session_state.usd_rate = rate
     except:
-        st.error("API Limit reached.")
+        st.error("API Limit reached. Wait 60 seconds.")
 
-# Helper function to render cards with colors
+# Helper function to create colorized cards
 def render_card(name, value, trend, label):
-    sentiment_class = "strip-green" if trend == "UP" or value > 50 else "strip-red"
-    trend_class = "trend-up" if trend == "UP" else "trend-down"
+    color_class = "border-green" if trend == "UP" else "border-red"
+    text_class = "text-green" if trend == "UP" else "text-red"
     arrow = "▲" if trend == "UP" else "▼"
     
     st.markdown(f"""
-        <div class='card {sentiment_class}'>
+        <div class='card {color_class}'>
             <h3>{name}</h3>
             <h1>{value}%</h1>
-            <p class='{trend_class}'>{arrow} {trend} ({label})</p>
+            <p class='{text_class}'>{arrow} {trend} ({label})</p>
         </div>
     """, unsafe_allow_html=True)
 
 # 2x2 Grid Layout
-row1_col1, row1_col2 = st.columns(2)
-with row1_col1:
-    render_card("USD", st.session_state.usd_val, "UP", f"{st.session_state.usd_rate}%")
-with row1_col2:
+col1, col2 = st.columns(2)
+with col1:
+    render_card("USD", st.session_state.usd_val, "UP", f"RATE: {st.session_state.usd_rate}%")
+with col2:
     render_card("EUR", 42, "DOWN", "3.25%")
 
-row2_col1, row2_col2 = st.columns(2)
-with row2_col1:
+col3, col4 = st.columns(2)
+with col3:
     render_card("GBP", 58, "UP", "5.25%")
-with row2_col2:
-    render_card("JPY", 12, "DOWN", "0.10%")unsafe_allow_html=True)
+with col4:
+    render_card("JPY", 12, "DOWN", "0.10%")
