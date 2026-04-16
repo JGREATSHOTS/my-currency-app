@@ -12,7 +12,7 @@ st.markdown("""
     .main { background-color: #131722; color: white; }
     .card { background-color: #1e2124; padding: 20px; border-radius: 15px; border: 1px solid #333; text-align: center; }
     </style>
-    """, unsafe_allow_dict=True)
+    """, unsafe_allow_html=True)
 
 st.title("B MARKET SENTINEL V1.0")
 
