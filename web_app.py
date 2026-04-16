@@ -35,7 +35,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.title("B MARKET SENTINEL V1.0")
+st.title("MARKET SENTINEL V1.0")
 
 # Session State for Data persistence
 if 'usd_val' not in st.session_state:
