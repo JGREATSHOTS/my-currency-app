@@ -4,7 +4,7 @@ import yfinance as yf
 from datetime import datetime
 
 # 1. Your Google Sheets Link for the 4 Fundamentals (GDP, Rate, CPI, Jobs)
-SHEET_CSV_URL = "YOUR_LINK_HERE"
+SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT5GylFqdLzvcmLMM4uL-CwAZHnPmsG_CSAUpBMlA5TERubmsMe3Z57gROgDbZY16BYDI90irCe8GA3/pub?gid=136390075&single=true&output=csv"
 
 st.set_page_config(page_title="Auto-Seasonality Matrix", layout="wide")
 
