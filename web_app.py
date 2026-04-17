@@ -11,30 +11,32 @@ st.set_page_config(page_title="FX Sentinel", layout="wide")
 # Custom CSS for your dark dashboard
 st.markdown("""
 <style>
-/* 1. Main Background & Global Text */
+/* 1. Dashboard Background */
 [data-testid="stAppViewContainer"] { 
     background-color: #131722; 
     color: white; 
 }
 
-/* 2. Table Layout & Scroll for Mobile */
+/* 2. Global Table & Mobile Scroll */
 .stMarkdown { overflow-x: auto; }
 table { 
     width: 100%; 
     border-collapse: collapse; 
     border: 1px solid #333; 
+    margin-left: auto; 
+    margin-right: auto;
 }
 
-/* 3. Header & Row Font Synchronization */
+/* 3. CENTER HEADERS & SYNC FONT SIZES */
 th, td { 
-    border: 1px solid #333; 
-    text-align: center; 
-    padding: 12px 8px; 
-    font-size: 16px; 
+    border: 1px solid #444; 
+    text-align: center !important; /* Forces centering for headers and rows */
+    padding: 15px 10px;           /* Increases cell height for bigger look */
+    font-size: 20px !important;    /* Bigger font for Rows & Column headers */
     white-space: nowrap;
 }
 
-/* 4. Column Header Styling */
+/* 4. Column Header (Top Row) */
 th { 
     background-color: #1e2124; 
     color: #ffffff; 
@@ -42,14 +44,15 @@ th {
     text-transform: uppercase;
 }
 
-/* 5. Row Header Styling */
+/* 5. Row Header (Side Column) */
 .side-header { 
     background-color: #fff3cd; 
     color: #000000; 
     font-weight: bold;
+    font-size: 20px !important;    /* Matches the top row exactly */
 }
 
-/* 6. High-Contrast Trade Signals */
+/* 6. High-Contrast Signals */
 .buy { 
     background-color: #00ff44 !important; 
     color: #003311 !important; 
@@ -62,9 +65,7 @@ th {
     font-weight: 900; 
 }
 
-.neutral { 
-    background-color: #1e2124; 
-}
+.neutral { background-color: #1e2124; }
 </style>
 """, unsafe_allow_html=True)
 
