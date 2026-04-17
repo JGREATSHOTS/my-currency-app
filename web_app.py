@@ -69,7 +69,7 @@ th {
 </style>
 """, unsafe_allow_html=True)
 
-st.title("MARKET SENTINEL: SEASONALITY MATRIX")
+st.title("CURRENCY HEAT MAP")
 
 @st.cache_data(ttl=86400)
 def get_seasonality(curr):
