@@ -3,54 +3,79 @@ import pandas as pd
 import yfinance as yf
 from datetime import datetime
 
-# 1. Your Google Sheets Link for the 4 Fundamentals (GDP, Rate, CPI, Jobs)
-SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT5GylFqdLzvcmLMM4uL-CwAZHnPmsG_CSAUpBMlA5TERubmsMe3Z57gROgDbZY16BYDI90irCe8GA3/pub?gid=136390075&single=true&output=csv"
+# 1. Your Google Sheets Link
+SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT5GylFqdLzvcMLMM4uL-CwAZHnPmsG_CSAUpBMlA5TERubmsMe3Z57gROgDbZY16BYDI90irCe8GA3/pub?gid=136390075&single=true&output=csv"
 
-st.set_page_config(page_title="Auto-Seasonality Matrix", layout="wide")
+st.set_page_config(page_title="FX Sentinel", layout="wide")
 
-# (Keep your existing CSS here...)
+# Custom CSS for your dark dashboard
+st.markdown("""
+    <style>
+    [data-testid="stAppViewContainer"] { background-color: #131722; color: white; }
+    .matrix-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-family: sans-serif; font-size: 12px; border: 1px solid #333; }
+    th { background-color: #1e2124; color: #888; padding: 10px; border: 1px solid #333; text-transform: uppercase; }
+    .side-header { background-color: #fff3cd; color: black; font-weight: bold; border: 1px solid #333; text-align: center; }
+    .buy { background-color: #d4edda; color: #155724; font-weight: bold; text-align: center; height: 40px; }
+    .sell { background-color: #f8d7da; color: #721c24; font-weight: bold; text-align: center; height: 40px; }
+    .neutral { background-color: #1e2124; border: 1px solid #333; }
+    </style>
+    """, unsafe_allow_html=True)
 
-@st.cache_data(ttl=86400) # Cache data for 24 hours
-def get_auto_seasonality(ticker):
-    """Calculates seasonality score based on 20-year historical win rate for current month."""
+st.title("B MARKET SENTINEL: SEASONALITY MATRIX")
+
+@st.cache_data(ttl=86400)
+def get_seasonality(curr):
+    if curr == "USD": return 5.0
     try:
-        data = yf.download(f"{ticker}=X", period="22y", interval="1mo")
+        # Pulls 20 years of data against USD
+        ticker = f"{curr}USD=X" if curr != "EUR" else "EURUSD=X"
+        data = yf.download(ticker, period="20y", interval="1mo", progress=False)
         current_month = datetime.now().month
-        
-        # Calculate monthly returns
-        data['Return'] = data['Close'].pct_change()
-        # Filter for the current month across all years
-        monthly_data = data[data.index.month == current_month]
-        
-        wins = len(monthly_data[monthly_data['Return'] > 0])
-        total_years = len(monthly_data)
-        win_rate = (wins / total_years) * 100
-        
-        # Convert win rate to a 1-10 score (50% win rate = 5 score)
-        return round(win_rate / 10, 1)
+        returns = data['Close'].pct_change()
+        monthly_returns = returns[returns.index.month == current_month]
+        win_rate = (len(monthly_returns[monthly_returns > 0]) / len(monthly_returns)) * 10
+        return round(win_rate, 1)
     except:
-        return 5.0 # Neutral fallback
-
-st.title("Auto-Seasonality & Fundamentals Matrix")
+        return 5.0
 
 try:
-    # Load Fundamentals from Google Sheets
     df = pd.read_csv(SHEET_CSV_URL)
     df.set_index('Currency', inplace=True)
-
-    # 2. AUTO-CALCULATE SEASONALITY
-    if st.button('CALCULATE LIVE SEASONALITY'):
-        with st.spinner('Analyzing 20 years of historical data...'):
-            for curr in df.index:
-                if curr != "USD": # yfinance uses USD as base (e.g. GBPUSD)
-                    df.at[curr, 'Seasonality'] = get_auto_seasonality(curr)
-                else:
-                    df.at[curr, 'Seasonality'] = 5.0 # USD is the baseline
+    
+    if st.button('🚀 RUN FULL ANALYSIS'):
+        with st.spinner('Calculating 20-year seasonality patterns...'):
+            # Build the matrix
+            currencies = ["AUD", "GBP", "CAD", "EUR", "JPY", "NZD", "CHF", "USD"]
             
-    # Calculate Final Strength Score
-    df['Score'] = (df['GDP'] + df['Rate'] + df['Seasonality']) - (df['CPI'] + df['Jobs'])
+            # Calculate Scores
+            scores = {}
+            for c in currencies:
+                s_score = get_seasonality(c)
+                # Formula: (GDP + Rate + Seasonality) - (CPI + Jobs)
+                f_score = (df.loc[c, 'GDP'] + df.loc[c, 'Rate'] + s_score) - (df.loc[c, 'CPI'] + df.loc[c, 'Jobs'])
+                scores[c] = f_score
 
-    # (Keep your existing Matrix Table generation code here...)
+            # Generate Table
+            html = "<table><tr><th>1 WEEK</th>"
+            for c in currencies: html += f"<th>{c}</th>"
+            html += "</tr>"
+
+            for r_curr in currencies:
+                html += f"<tr><td class='side-header'>{r_curr}</td>"
+                for c_curr in currencies:
+                    if r_curr == c_curr:
+                        html += "<td class='neutral'></td>"
+                    else:
+                        if scores[r_curr] >= scores[c_curr]:
+                            html += "<td class='buy'>BUY</td>"
+                        else:
+                            html += "<td class='sell'>SELL</td>"
+                html += "</tr></table>"
+            
+            st.markdown(html, unsafe_allow_html=True)
+    else:
+        st.info("Tap the button above to generate the matrix.")
 
 except Exception as e:
-    st.error("Setup required: Add your CSV link and update requirements.txt")
+    st.error(f"Waiting for data... Ensure Google Sheet is Published as CSV. Error: {e}")
