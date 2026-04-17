@@ -96,12 +96,18 @@ try:
             currencies = ["AUD", "GBP", "CAD", "EUR", "JPY", "NZD", "CHF", "USD"]
             
             # Calculate Scores
-            scores = {}
-            for c in currencies:
-                s_score = get_seasonality(c)
-                # Formula: (GDP + Rate + Seasonality) - (CPI + Jobs)
-                f_score = (df.loc[c, 'GDP'] + df.loc[c, 'Rate'] + s_score) - (df.loc[c, 'CPI'] + df.loc[c, 'Jobs'])
-                scores[c] = f_score
+        scores = {}
+        for c in currencies:
+            # 1. Get Seasonality (scaled to match percentages)
+            s_win_rate = get_seasonality(c)
+            s_score = s_win_rate * 100  # Converts 0.60 to 60 for fair weighting
+            
+            # 2. Fundamental Logic: Positive drivers minus Negative drivers
+            # Logic: (GDP Growth + Interest Rate + Inflation) - Jobless Rate
+            f_score = (df.loc[c, 'GDP'] + df.loc[c, 'Rate'] + df.loc[c, 'CPI']) - df.loc[c, 'Jobs']
+            
+            # 3. Final Combined Score
+            scores[c] = f_score + s_score
 
             # Generate Table
         html = "<table><tr><th>1 WEEK</th>"
