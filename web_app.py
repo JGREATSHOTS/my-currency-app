@@ -10,34 +10,63 @@ st.set_page_config(page_title="FX Sentinel", layout="wide")
 
 # Custom CSS for your dark dashboard
 st.markdown("""
-    <style>
-    [data-testid="stAppViewContainer"] { background-color: #131722; color: white; }
-    
-    /* MOBILE OPTIMIZATION: Allows the table to scroll sideways */
-    .stMarkdown { overflow-x: auto; }
-    
-    table { 
-        width: 100%; 
-        border-collapse: collapse; 
-        font-family: sans-serif; 
-        font-size: 11px; /* Slightly smaller for mobile */
-        border: 1px solid #333; 
-    }
-    
-    th, td { 
-        white-space: nowrap; /* Prevents text from wrapping */
-        padding: 8px 4px; 
-        border: 1px solid #333; 
-        text-align: center;
-    }
-    
-    th { background-color: #1e2124; color: #888; text-transform: uppercase; }
-    .side-header { background-color: #fff3cd; color: black; font-weight: bold; }
-    .buy { background-color: #d4edda; color: #155724; font-weight: bold; }
-    .sell { background-color: #f8d7da; color: #721c24; font-weight: bold; }
-    .neutral { background-color: #1e2124; }
-    </style>
-    """, unsafe_allow_html=True)
+<style>
+/* 1. Main Background & Global Text */
+[data-testid="stAppViewContainer"] { 
+    background-color: #131722; 
+    color: white; 
+}
+
+/* 2. Table Layout & Scroll for Mobile */
+.stMarkdown { overflow-x: auto; }
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    border: 1px solid #333; 
+}
+
+/* 3. Header & Row Font Synchronization */
+th, td { 
+    border: 1px solid #333; 
+    text-align: center; 
+    padding: 12px 8px; 
+    font-size: 16px; 
+    white-space: nowrap;
+}
+
+/* 4. Column Header Styling */
+th { 
+    background-color: #1e2124; 
+    color: #ffffff; 
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* 5. Row Header Styling */
+.side-header { 
+    background-color: #fff3cd; 
+    color: #000000; 
+    font-weight: bold;
+}
+
+/* 6. High-Contrast Trade Signals */
+.buy { 
+    background-color: #00ff44 !important; 
+    color: #003311 !important; 
+    font-weight: 900; 
+}
+
+.sell { 
+    background-color: #ff3131 !important; 
+    color: #ffffff !important; 
+    font-weight: 900; 
+}
+
+.neutral { 
+    background-color: #1e2124; 
+}
+</style>
+""", unsafe_allow_html=True)
 
 st.title("MARKET SENTINEL: SEASONALITY MATRIX")
 
