@@ -4,7 +4,7 @@ import yfinance as yf
 from datetime import datetime
 
 # 1. Your Google Sheets Link
-SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1Kpvnptn26dtSveU1JES2RHp24A9DFXOvYEomXyvjf4k/export?format=csv&gid=0"
+SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1Kpvnptn26dtSveU1JES2RHp24A9DFXOvYEomXyvjf4k/export?format=csv&gid=136390075"
 
 st.set_page_config(page_title="FX Sentinel", layout="wide")
 
