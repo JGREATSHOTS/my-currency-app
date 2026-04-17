@@ -12,13 +12,30 @@ st.set_page_config(page_title="FX Sentinel", layout="wide")
 st.markdown("""
     <style>
     [data-testid="stAppViewContainer"] { background-color: #131722; color: white; }
-    .matrix-container { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-family: sans-serif; font-size: 12px; border: 1px solid #333; }
-    th { background-color: #1e2124; color: #888; padding: 10px; border: 1px solid #333; text-transform: uppercase; }
-    .side-header { background-color: #fff3cd; color: black; font-weight: bold; border: 1px solid #333; text-align: center; }
-    .buy { background-color: #d4edda; color: #155724; font-weight: bold; text-align: center; height: 40px; }
-    .sell { background-color: #f8d7da; color: #721c24; font-weight: bold; text-align: center; height: 40px; }
-    .neutral { background-color: #1e2124; border: 1px solid #333; }
+    
+    /* MOBILE OPTIMIZATION: Allows the table to scroll sideways */
+    .stMarkdown { overflow-x: auto; }
+    
+    table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        font-family: sans-serif; 
+        font-size: 11px; /* Slightly smaller for mobile */
+        border: 1px solid #333; 
+    }
+    
+    th, td { 
+        white-space: nowrap; /* Prevents text from wrapping */
+        padding: 8px 4px; 
+        border: 1px solid #333; 
+        text-align: center;
+    }
+    
+    th { background-color: #1e2124; color: #888; text-transform: uppercase; }
+    .side-header { background-color: #fff3cd; color: black; font-weight: bold; }
+    .buy { background-color: #d4edda; color: #155724; font-weight: bold; }
+    .sell { background-color: #f8d7da; color: #721c24; font-weight: bold; }
+    .neutral { background-color: #1e2124; }
     </style>
     """, unsafe_allow_html=True)
 
