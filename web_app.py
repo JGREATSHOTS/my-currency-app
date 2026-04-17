@@ -57,28 +57,27 @@ try:
                 scores[c] = f_score
 
             # Generate Table
-html = "<table><tr><th>1 WEEK</th>"
-for c in currencies: 
-    html += f"<th>{c}</th>"
-html += "</tr>"
+        html = "<table><tr><th>1 WEEK</th>"
+        for c in currencies: 
+            html += f"<th>{c}</th>"
+        html += "</tr>"
 
-for r_curr in currencies:
-    html += f"<tr><td class='side-header'>{r_curr}</td>"
-    for c_curr in currencies:
-        if r_curr == c_curr:
-            html += "<td class='neutral'></td>"
-        else:
-            # Strength Comparison Logic
-            if scores[r_curr] >= scores[c_curr]:
-                html += "<td class='buy'>BUY</td>"
-            else:
-                html += "<td class='sell'>SELL</td>"
-    html += "</tr>"
+        for r_curr in currencies:
+            html += f"<tr><td class='side-header'>{r_curr}</td>"
+            for c_curr in currencies:
+                if r_curr == c_curr:
+                    html += "<td class='neutral'></td>"
+                else:
+                    # Strength Comparison Logic
+                    if scores[r_curr] >= scores[c_curr]:
+                        html += "<td class='buy'>BUY</td>"
+                    else:
+                        html += "<td class='sell'>SELL</td>"
+            html += "</tr>"
 
-html += "</table>" # THIS MUST BE OUTSIDE THE LOOP
-st.markdown(html, unsafe_allow_html=True)
-            
-            st.markdown(html, unsafe_allow_html=True)
+        html += "</table>" # Finalizing the table structure
+        st.markdown(html, unsafe_allow_html=True) # Displaying the final matrix
+
     else:
         st.info("Tap the button above to generate the matrix.")
 
